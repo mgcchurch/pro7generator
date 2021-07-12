@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+.vscode
+.idea
+src/proto/Input/Lyrics_Database.mdb
+src/proto/Input/Lyrics_Database.ldb
