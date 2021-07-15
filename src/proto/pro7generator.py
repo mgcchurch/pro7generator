@@ -65,13 +65,15 @@ class pro7generator:
         Use the lyrics template to generate lyrics files in the output folder
         """
 
-        # import the lyrics template
-        # try:
-        #   with open(config_parser['LYRICS']['template_path'], "rb") as f:
-        #     presentation = presentation_pb2.Presentation()
-        #     presentation.ParseFromString(f.read())
-        # except IOError:
-        #   print("Lyrics template file not found.")
+        # import the lyrics template file which is defined in the config.ini
+        try:
+            a = config_parser['LYRICS']['template_path']
+            with open(config_parser['LYRICS']['template_path'], "rb") as f:
+                presentation = presentation_pb2.Presentation()
+                presentation.ParseFromString(f.read())
+        except IOError:
+            print("Lyrics template file not found.")
+            return
 
         lyrics = Lyrics()
         # import MS Access database file
@@ -81,28 +83,28 @@ class pro7generator:
 
         cursor = conn.cursor()
         cursor.execute('select * from Lyrics')
+        # fetch all data from lyrics database file
         for row in cursor.fetchall():
-            print(row)
-        # pick up one lyrics
             for index in range(lyrics.database_length):
                 lyrics.singer = row[lyrics.database_dictionary["singer"]]
                 lyrics.youtube = row[lyrics.database_dictionary["youtube"]]
                 lyrics.traditional["[Title]"].append(
                     row[lyrics.database_dictionary["title_traditional"]])
+                # split lyrics text into each line
                 traditional_elements = row[lyrics.database_dictionary["lyrics_traditional"]].splitlines(
                 )
                 current_label = None
                 for element in traditional_elements:
+                    # if the element in the line is label, record the current label
                     if element in lyrics.traditional.keys():
                         current_label = element
                     else:
-                        if current_label is not None:
+                        if current_label is not None and element != "":
                             lyrics.traditional[current_label].append(element)
 
-        # pick up sentence in the lyrics
-        # create slide in the lyrics pro file
-        # new_cue = presentation.cues.add()
-        # new_cue.CopyFrom(presentation.cues[1])
+            # create slide in the lyrics pro file
+            new_cue = presentation.cues.add()
+            new_cue.CopyFrom(presentation.cues[1])
 
         # output lyrics pro file in the output folder
 
