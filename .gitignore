@@ -131,3 +131,4 @@ dmypy.json
 .idea
 src/proto/Input/Lyrics_Database.mdb
 src/proto/Input/Lyrics_Database.ldb
+src/proto/Output
